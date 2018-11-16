@@ -1,0 +1,74 @@
+﻿@using BlazorWithCassandraAddressBook.Shared.Models
+@page "/addaddressbook"
+@inject HttpClient Http
+@inject Microsoft.AspNetCore.Blazor.Services.IUriHelper UriHelper
+
+<h2>Create Address Book</h2>
+<hr />
+<form>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="FirstName" class="control-label">First Name</label>
+                <input for="FirstName" class="form-control" bind="@addressBook.FirstName" />
+            </div>
+            <div class="form-group">
+                <label for="Gender" class="control-label">Gender</label>
+                <select for="Gender" class="form-control" bind="@addressBook.Gender">
+                    <option value="">-- Select Gender --</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ZipCode" class="control-label">ZipCode</label>
+                <input for="ZipCode" class="form-control" bind="@addressBook.ZipCode" />
+            </div>
+            <div class="form-group">
+                <label for="State" class="control-label">State</label>
+                <input for="State" class="form-control" bind="@addressBook.State" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="LastName" class="control-label">Last Name</label>
+                <input for="LastName" class="form-control" bind="@addressBook.LastName" />
+            </div>
+            <div class="form-group">
+                <label for="Address" class="control-label">Address</label>
+                <input for="Address" class="form-control" bind="@addressBook.Address" />
+            </div>
+            <div class="form-group">
+                <label for="Country" class="control-label">Country</label>
+                <input for="Country" class="form-control" bind="@addressBook.Country" />
+            </div>
+            <div class="form-group">
+                <label for="Phone" class="control-label">Phone</label>
+                <input for="Phone" class="form-control" bind="@addressBook.Phone" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-default" onclick="@(async () => await CreateAddressBook())" value="Save" />
+                <input type="button" class="btn" onclick="@Cancel" value="Cancel" />
+            </div>
+        </div>
+    </div>
+</form>
+@functions {
+
+AddressBook addressBook = new AddressBook();
+
+protected async Task CreateAddressBook()
+{
+    await Http.SendJsonAsync(HttpMethod.Post, "/api/AddressBooks/Create", addressBook);
+    UriHelper.NavigateTo("/listaddressbooks");
+}
+
+void Cancel()
+{
+    UriHelper.NavigateTo("/listaddressbooks");
+}
+}

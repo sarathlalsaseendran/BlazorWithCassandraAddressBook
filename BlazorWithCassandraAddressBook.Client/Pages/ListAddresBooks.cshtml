@@ -1,0 +1,53 @@
+﻿@using BlazorWithCassandraAddressBook.Shared.Models
+@page "/listaddressbooks"
+@inject HttpClient Http
+
+<h1>Address Book Details</h1>
+<p>
+    <a href="/addaddressbook">Create New Address Book</a>
+</p>
+@if (addressBooks == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Address</th>
+                <th>ZipCode</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var address in addressBooks)
+            {
+                <tr>
+                    <td>@address.FirstName</td>
+                    <td>@address.LastName</td>
+                    <td>@address.Gender</td>
+                    <td>@address.Address</td>
+                    <td>@address.ZipCode</td>
+                    <td>@address.Phone</td>
+                    <td>
+                        <a href='/editaddressbook/@address.Id'>Edit</a>
+                        <a href='/deleteaddressbook/@address.Id'>Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@functions {
+AddressBook[] addressBooks;
+
+protected override async Task OnInitAsync()
+{
+    addressBooks = await Http.GetJsonAsync<AddressBook[]>("/api/AddressBooks/Get");
+}
+
+}
